@@ -23,7 +23,7 @@ local re_gmatch   = ngx.re.gmatch
 local re_compile = require("resty.core.regex").re_match_compile
 local re_find = ngx.re.find
 local ipairs = ipairs
-local origins_pattern = [[^(\*|\*\*|null|\w+://[^,]+(,\w+://[^,]+)*)$]]
+local origins_pattern = [[^(\*|\*\*|null|\w+://[^,]+(,\w+://[^,]+)*)?$]]
 
 
 local lrucache = core.lrucache.new({
@@ -177,6 +177,8 @@ function _M.check_schema(conf, schema_type)
                 return false, err
             end
         end
+    elseif conf.allow_origins == "" then
+        return false, "you must set 'allow_origins' or 'allow_origins_by_regex'"
     end
 
     return true
